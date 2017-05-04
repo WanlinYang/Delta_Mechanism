@@ -7,13 +7,29 @@
 
 #define PI 3.14159
 
+// calculate inverse 3x3 matrix
 void Inverse3x3(const double *s, double *d);
+
+// Delta original equations for forward kinematics
 void DeltaoFunction(double *x, double *blist, double *plist, double *Llist, double L2, double *d);
+
+// Delta derivative equations for forward kinematics
 void DeltadFunction(double *x, double *blist, double *plist, double *Llist, double L2, double *df);
+
+// Newton-Raphson method solving equations of forward kinematics
 void NewtonMethod(double *x, double *blist, double *plist, double *Llist, double L2, double *d);
+
+// Delta forward kinematics
 void DeltaFkin(const double R1, const double R2, const double L1, const double L2, double *thetalist, double *p0, double *p);
+
+// Delta inverse kinematics
 void DeltaIkin(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *thetalist);
+
+// Delta Jacobian
 void DeltaJocabian(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *J);
+
+
+// Following are helper functions for matrix calculation
 
 
 void mr_Print(const char *str);
