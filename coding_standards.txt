@@ -1,0 +1,150 @@
+0. Code without comments == incomplete code
+   The more annoying the code is to comment, the more it needs comments.
+   
+1. Functions: Comment all functions (Doxygen style)
+   /// @brief A brief description of the function here
+   /// A more detailed description goes
+   /// on the subsequent lines. Then we list each parameter
+   /// We state whether it is an input, an output, or an input/output
+   /// @param Param1 [in] This is an input parameter. What does it do?
+   /// @param Param2 [out] This parameter is an output. What does it do? Can it be null?
+   /// @param Param3 [in/out] This is both an input and an output.
+   /// @returns A description of what is returned, including any possible error conditions
+   /// @pre Conditions that must be satisfied prior to calling the function
+   /// @pre GlobalVar X must be > 0 (although try to minimize global variable usage)
+   /// @pre Param3 must not be NULL
+   /// @pre Param 1 must be between 0 and 4
+   /// Depending on our architecture and the performance requirements, pre conditions should be checked and
+   /// Errors triggered as appropriate
+   /// @post anything that is true (especially with regard to global state) after function is called
+   /// @post "Hello World" will be sent out of UART1
+   /// @post GlobalVar Y will be set to 7
+   /// @post on error, errno will be set to BLAH
+
+2. Math: Comment all equations that are preformed in code with:
+     A description of what the equation is.
+     A Latex compatible version of the equation.
+     A reference to more information about it.
+     For example
+     /// The code below implements the matrix-inversion lemma 
+     /// $A + UCV^{-1} = A^{-1} - A^{-1}U(C^{-1} + V A^{-1} U)^{-1} V A^{-1}
+     Implementation here
+
+3. Compiler flags:
+     -std=c99     - Use the c99 standard
+     -pedantic    - strictly adhere to the standard
+     -Wall        - Lots of warnings
+     -Wextra      - Even more warnings
+     -Werror      - Ideal, but can be relaxed (e.g, if an external library won't compile cleanly)
+
+
+3. Check return values of all functions called and handle any error conditions. (exception no need to check result of printf and friends)
+    Never fail silently.
+    Find a way to report the error (more information is usually better).
+   
+
+5. All control-flow statements should use braces, even if one line
+   Do not do:
+   if(x > 0)
+      do_stuff()
+
+   Instead do:
+   if(x > 0)
+   {
+      do_stuff()
+   }
+
+6. Variables:
+    Initialize ALL variables: This means every variable declaration includes an equal sign (=)
+    Also, most variables should have a comment after the declaration describing its purpose
+    Do NOT do:
+    int x;
+
+    Instead do,
+    int x = 0; // x is the distance in meters between two points
+
+    Do this even for code where the initial value is ignored:
+    int x = 0; 
+    if(2 == y)
+    {
+       x = 3;
+    }
+    else
+    {
+      x = 4;
+    }
+
+    DO NOT REUSE VARIABLES for different purposes, declare a new variable instead.
+
+    DECLARE variables close to the code where they are used, not all at the top of a function
+    Use the most local scope possible.
+    Avoid extern global variables (almost) entirely.  
+
+    Take advantage of the c99 headers
+    #include<stdint.h>
+    #include<stdbool.h>
+    These files provide access to boolean types:
+    bool f = false;
+    and fixed size integer types, which should be used when you want a fixed size
+
+    Prefer uint8_t to char or unsigned char:
+    uint8_t byte = 0; // a unsigned 8 bit integer (aka a byte)
+
+
+    int32_t signed32bitinteger = 0; // a signed 32 bit integer
+
+7. Constants:
+    In c99 we can use the keyword const. Use it often! Prefer it to #define
+    Old Way
+    #define PI 3.14159266
+    New Way
+    static const double PI = 3.14159266; // (Note the static)
+
+    Also use const for parameters to functions that take pointers but don't change the contents of the memory
+    unsigned int string_length(const char * stuff);
+
+
+8. Arrays:
+    Useful way of getting a length of a statically allocated array
+    int array[10] = {0}; // note the {0} initializes the array to all zeros
+    size_t length = sizeof(array)/sizeof(array[0]);
+
+    We can use this as a macro
+    #define ARRAY_LEN(x) (sizeof(x)/sizeof((x)[0]))
+
+    This macro is often (but not always) preferable to
+    #define ARRAY_LEN 3
+    int array[3] = {1,2,3}
+    
+    C99 permits declaring the variable of the for loop inside the loop. Do this almost always
+    For example:
+    for(size_t i = 0; i != ARRAY_LEN(array); ++i)
+    {
+    }
+
+9. Enumerations:
+   Use enumerations whenever  a variable takes on set of values each of which corresponds to a discrete meaning.
+   If you find yourself writing something like
+
+   static const int STOP_MODE = 0;
+   static const int RUN_MODE = 1;
+   static const int SLEEP_MODE = 2;
+
+   Consider using an enumeration. Either assign no items explicit values:
+   enum Mode {STOP_MODE, RUN_MODE, SLEEP_MODE};
+
+   OR assign all modes explicit values
+   enum Mode{STOP_MODE = 0, RUN_MODE = 1, SLEEP_MODE = 2};
+
+10. Case Statements:
+     Use case statements when checking a variable for a fixed set of values
+         This is especially true if the variable is an enum
+     Always include a break statement after every case.
+     Always include a default case
+        if the default case should be unreachable, raise an error!
+   
+
+
+
+
+   
