@@ -1,5 +1,4 @@
 # Delta_Mechanism
-Delta Mechanism
 
 The functions are written in C
 Functions include inverse, forward kinematics, and Jacobian.
