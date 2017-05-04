@@ -144,17 +144,20 @@ void Inverse3x3(const double *s, double *d) {
 }
 
 void DeltaoFunction(double *x, double *blist, double *plist, double *Llist, double L2, double *d){
-	
+	// elements of x
 	double x1 = *x++; double x2 = *x++; double x3 = *x;
 	
+	// elements of blist
 	double b11 = *blist++; double b12 = *blist++; double b13 = *blist++;
 	double b21 = *blist++; double b22 = *blist++; double b23 = *blist++;
 	double b31 = *blist++; double b32 = *blist++; double b33 = *blist;
 	
+	// elements of plist
 	double p11 = *plist++; double p12 = *plist++; double p13 = *plist++;
 	double p21 = *plist++; double p22 = *plist++; double p23 = *plist++;
 	double p31 = *plist++; double p32 = *plist++; double p33 = *plist;
 	
+	// elements of Llist
 	double L11 = *Llist++; double L12 = *Llist++; double L13 = *Llist++;
 	double L21 = *Llist++; double L22 = *Llist++; double L23 = *Llist++;
 	double L31 = *Llist++; double L32 = *Llist++; double L33 = *Llist;
@@ -167,7 +170,7 @@ void DeltaoFunction(double *x, double *blist, double *plist, double *Llist, doub
 
 void DeltadFunction(double *x, double *blist, double *plist, double *Llist, double L2, double *df){
 	double h = 0.0001;
-	double df11, df12=0, df13=0, df21=0, df22=0, df23=0, df31=0, df32=0, df33=0;
+	double df11=0, df12=0, df13=0, df21=0, df22=0, df23=0, df31=0, df32=0, df33=0;
 	
 	double b11 = *blist++; double b12 = *blist++; double b13 = *blist++;
 	double b21 = *blist++; double b22 = *blist++; double b23 = *blist++;
