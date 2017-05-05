@@ -144,6 +144,23 @@ void Inverse3x3(const double *s, double *d) {
 }
 
 void DeltaoFunction(double *x, double *blist, double *plist, double *Llist, double L2, double *d){
+/*
+
+DeltaoFunction is the original function of forward kinematics of Delta robot
+Input parameters of Delta robot, including *blist, *plist, *Llist, L2. And *x is the initial guess of the vector p
+Output the left-hand-side value of the equations
+
+The equations are derived from the equation:
+	L_2^2=(\textbf{p}-\textbf{R}_{1i}+\textbf{R}_{2i}-\textbf{L}_{1i})^T(\textbf{p}-\textbf{R}_{1i}+\textbf{R}_{2i}-\textbf{L}_{1i})\qquad   i=1,2,3
+	where L_2 is lenth of upper legs, p is a 3x1 vector of the position of end-effector,
+	R_1i coordinates with *blist, a 3x3 matrix, in which each row is a vector of the lower platform from the center to R-joint in space frame
+	R_2i coordinates with *plist, a 3x3 matrix, in which each row is a vector of the upper platform from the center to U-joint in body frame
+	L_1i coordinates with *Llist, a 3x3 matrix, in which each row is a vector of the lower legs. Vectors of lower legs are calculated from theta
+
+*x is a 3-element array of unknown parameters in p vector, the input is a initial guess
+*d is the output of the function. The target of the following iterations is to make the elements of d equal to 0
+
+*/
 	// elements of x
 	double x1 = *x++; double x2 = *x++; double x3 = *x;
 	
@@ -162,6 +179,13 @@ void DeltaoFunction(double *x, double *blist, double *plist, double *Llist, doub
 	double L21 = *Llist++; double L22 = *Llist++; double L23 = *Llist++;
 	double L31 = *Llist++; double L32 = *Llist++; double L33 = *Llist;
 
+/*
+For the following equation, move the term L_2^2 to the right hand side, thus the target is to solve x1, x2, x3, making the equations equal to 0
+
+	L_2^2=(\textbf{p}-\textbf{R}_{1i}+\textbf{R}_{2i}-\textbf{L}_{1i})^T(\textbf{p}-\textbf{R}_{1i}+\textbf{R}_{2i}-\textbf{L}_{1i})\qquad   i=1,2,3
+	
+	==> d = (\textbf{p}-\textbf{R}_{1i}+\textbf{R}_{2i}-\textbf{L}_{1i})^T(\textbf{p}-\textbf{R}_{1i}+\textbf{R}_{2i}-\textbf{L}_{1i})\qquad-L_2^2
+*/
 	*d++ = (x1+p11-L11-b11)*(x1+p11-L11-b11)+(x2+p12-L12-b12)*(x2+p12-L12-b12)+(x3+p13-L13-b13)*(x3+p13-L13-b13)-L2*L2;
 	*d++ = (x1+p21-L21-b21)*(x1+p21-L21-b21)+(x2+p22-L22-b22)*(x2+p22-L22-b22)+(x3+p23-L23-b23)*(x3+p23-L23-b23)-L2*L2;
 	*d = (x1+p31-L31-b31)*(x1+p31-L31-b31)+(x2+p32-L32-b32)*(x2+p32-L32-b32)+(x3+p33-L33-b33)*(x3+p33-L33-b33)-L2*L2;
@@ -169,6 +193,12 @@ void DeltaoFunction(double *x, double *blist, double *plist, double *Llist, doub
 }
 
 void DeltadFunction(double *x, double *blist, double *plist, double *Llist, double L2, double *df){
+/*
+DeltadFunction calculates the derivative of DeltaoFunction with numerical method
+Input parameters same as those in DeltaoFunction
+Output the value of 3x3 matrix of derivatives
+
+*/
 	double h = 0.0001;
 	double df11=0, df12=0, df13=0, df21=0, df22=0, df23=0, df31=0, df32=0, df33=0;
 	
