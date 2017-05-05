@@ -37,7 +37,7 @@ void DeltaFkin(const double R1, const double R2, const double L1, const double L
 void DeltaIkin(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *thetalist);
 
 // Input end-effector position (x,y,z) in space frame to get 3x3 Jacobian
-void DeltaJocabian(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *J);
+void DeltaJacobian(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *J);
 
 /*
 Following are helper functions for matrix calculation from MR_C

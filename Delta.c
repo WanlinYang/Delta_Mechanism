@@ -194,10 +194,9 @@ For the following equation, move the term L_2^2 to the right hand side, thus the
 
 void DeltadFunction(double *x, double *blist, double *plist, double *Llist, double L2, double *df){
 /*
-DeltadFunction calculates the derivative of DeltaoFunction with numerical method
+DeltadFunction calculates the derivative of DeltaoFunction with numerical method at point *x
 Input parameters same as those in DeltaoFunction
 Output the value of 3x3 matrix of derivatives
-
 */
 	double h = 0.0001;
 	double df11=0, df12=0, df13=0, df21=0, df22=0, df23=0, df31=0, df32=0, df33=0;
@@ -223,6 +222,26 @@ Output the value of 3x3 matrix of derivatives
 	double ftemp_plus[3]; double ftemp_minus[3];
 	double ftemp_d[3];
 	double dftemp[3];
+	
+/*
+The function will output a 3x3 vector of partial derivatives:
+
+\begin{equation}
+\frac{\partial f(x)}{\partial x}=
+\begin{pmatrix}
+\dfrac{\partial f_1(x)}{\partial x_1}&\dfrac{\partial f_1(x)}{\partial x_2} & \dfrac{\partial f_1(x)}{\partial x_3}\\
+\dfrac{\partial f_2(x)}{\partial x_1}&\dfrac{\partial f_2(x)}{\partial x_2} & \dfrac{\partial f_2(x)}{\partial x_3}\\
+\dfrac{\partial f_3(x)}{\partial x_1}&\dfrac{\partial f_3(x)}{\partial x_2} & \dfrac{\partial f_3(x)}{\partial x_3}\\
+\end{pmatrix}
+\end{equation}
+
+The basic idea of numerical derivative is to use the definition of partial derivative:
+
+The partial derivative of an n-ary function f(x_1,...,x_n) in the direction x_i at the point (a_1,...,a_n) is defined to be:
+\frac{\partial f}{\partial x_i}(a_1,...,a_n)=\lim_{h\to 0}\frac{f(a_1,...,a_i+h,...,a_n)-f(a_1,...,a_i,...,a_n)}{h}
+
+In this function, the (a_1,a_2,a_3) in the equation above is replaced by (x_1,x_2,x_3) in *x, and h = 0.0001
+*/
 	
 	double htemp[3] = {h, 0, 0};
 	mr_AddVectors(xf, htemp, 3, xtemp_plus);
@@ -257,6 +276,11 @@ Output the value of 3x3 matrix of derivatives
 }
 
 void NewtonMethod(double *x, double *blist, double *plist, double *Llist, double L2, double *d){
+/*
+NewtonMethod calculates the end-effector position (x1,x2,x3) with Newton-Raphson method
+Input parameters same as those in DeltaoFunction
+Output the results of the original equation set in DeltaoFunction
+*/
 	
 	double b11 = *blist++; double b12 = *blist++; double b13 = *blist++;
 	double b21 = *blist++; double b22 = *blist++; double b23 = *blist++;
@@ -281,7 +305,20 @@ void NewtonMethod(double *x, double *blist, double *plist, double *Llist, double
 	
 	DeltaoFunction(xf, blistf, plistf, Llistf, L2, y);
 	DeltadFunction(xf, blistf, plistf, Llistf, L2, dy);
-	
+
+/*
+
+The iteration equation is:
+
+\begin{equation}
+x_{k+1}=x_{k}-\big(\frac{\partial f}{\partial x}(x_k)\big)^{-1}f(x_k)
+\end{equation}
+
+where \frac{\partial f}{\partial x}(x_k) is the 3x3 derivative matrix from DeltadFunction
+
+Iterate the x until a the stopping criterion is satisfied: $|f(x_{k+1}-f(x_k)|\leq\epsilon$ for the small value $\epsilon$
+
+*/	
 	while (1){
 		Inverse3x3(dy, invdy);
 		mr_MV(invdy, 3, 3, y, s);
@@ -297,6 +334,15 @@ void NewtonMethod(double *x, double *blist, double *plist, double *Llist, double
 }
 
 void DeltaFkin(const double R1, const double R2, const double L1, const double L2, double *thetalist, double *p0, double *p){
+/*
+DeltaFkin solves forward kinematics of Delta robot
+Input parameters of Delta robot, including R1, radius of lower platform; R2, radius of upper platform;
+	L1, length of lower legs; L2, length of upper legs; *thetalist, R-joint angles;
+	*p0, initial guess of end-effector position
+Output *p, position of end-effector expressed as a 3-element array
+
+R1, R2, L1, *thetalist are used to calculate blist, plist, and thetalist, which are inputs of DeltaoFunction, DeltadFunction, and NewtonMethod
+*/
 	double th1 = *thetalist++, th2 = *thetalist++, th3 = *thetalist;
 	double blist[9] = {R1, 0, 0, -R1*0.5, R1*0.866, 0, -R1*0.5, -R1*0.866, 0};
 	double plist[9] = {R2, 0, 0, -R2*0.5, R2*0.866, 0, -R2*0.5, -R2*0.866, 0};
@@ -311,6 +357,12 @@ void DeltaFkin(const double R1, const double R2, const double L1, const double L
 }
 
 void DeltaIkin(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *thetalist){
+/*
+DeltaIkin solves inverse kinematics of Delta robot
+Input parameters of Delta robot, including R1, radius of lower platform; R2, radius of upper platform;
+	L1, length of lower legs; L2, length of upper legs; (x,y,z) position of end-effector in space frame
+Output *thetalist, R-joint angles expressed as a 3-element array
+*/
 	double bmplist[9],G[3],E,F[3],tp,tm,thetap,thetam ;
 	int i,j;
 	bmplist[0]=R1-R2; bmplist[1]=0; bmplist[2]=0;
@@ -339,7 +391,13 @@ void DeltaIkin(const double R1, const double R2, const double L1,const double L2
 	}
 }
 
-void DeltaJocabian(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *J){
+void DeltaJacobian(const double R1, const double R2, const double L1,const double L2,const double x,const double y,const double z,double *J){
+/*
+DeltaJacobian calculates the 3x3 Jacobian matrix for a particular configuration (x,y,z)
+Input parameters of Delta robot, including R1, radius of lower platform; R2, radius of upper platform;
+	L1, length of lower legs; L2, length of upper legs; (x,y,z) position of end-effector in space frame
+Output *J, a 3x3 Jacobian matrix, x_dot = J * theta_dot
+*/
 	double pmbmllist[9],A[9],B[9],thetalist[3],InvA[9];
 	DeltaIkin(R1,R2,L1,L2,x,y,z,thetalist);
     pmbmllist[0] = R2-R1-L1*sin(thetalist[0]); 

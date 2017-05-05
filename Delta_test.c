@@ -66,7 +66,7 @@ void test_DeltaFkin() {
   mr_PrintVector(p,3);   
 }
 
-void test_DeltaJocabian() {
+void test_DeltaJacobian() {
   char str[64];
   double R1 = 1;
   double R2 = 0.5;
@@ -76,7 +76,7 @@ void test_DeltaJocabian() {
   double y = 0.3;
   double z = 1.5;
   double J[9];
-  DeltaJocabian(R1,R2,L1,L2,x,y,z,J);
+  DeltaJacobian(R1,R2,L1,L2,x,y,z,J);
   sprintf(str,"Jacobian test:\n");
   mr_Print(str);
   sprintf(str,"R1 = %.1f\n",R1);
@@ -103,7 +103,7 @@ int main(void) {
   
   test_DeltaIkin(); 
   test_DeltaFkin();
-  test_DeltaJocabian();
+  test_DeltaJacobian();
   return(0);
   
   
