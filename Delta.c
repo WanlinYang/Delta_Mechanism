@@ -226,6 +226,8 @@ Output the value of 3x3 matrix of derivatives
 /*
 The function will output a 3x3 vector of partial derivatives:
 
+Refer to the formula of the forward kinematics section
+
 \begin{equation}
 \frac{\partial f(x)}{\partial x}=
 \begin{pmatrix}
