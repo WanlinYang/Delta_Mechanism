@@ -45,4 +45,7 @@ void spi_reset_spring_encoders(void);
 //read spring abs encoders
 void spi_read_spring_encoders(float *encoderlist);
 
+//send PWM
+void spi_send_PWM(float *PWM_list);
+
 #endif//SPI_MASTER_H

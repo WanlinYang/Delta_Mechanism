@@ -125,7 +125,7 @@ void spi_send_torquelist(float *torque){
 	CS2 = 0;//lower CS pin of JC2
 	spi_master_io_int(0x01000000);
 	while(CHECK2 == 0){;}//send mode
-    spi_send_one_float(tor_JC2_int); //send data
+	spi_send_one_float(tor_JC2_int); //send data
 	while(CHECK2 == 1){;}//send the data until check 0x00000002 sent from slave
 	_CP0_SET_COUNT(0);
 	while(_CP0_GET_COUNT() < 300){;}   //Delay for safety
@@ -135,7 +135,7 @@ void spi_send_torquelist(float *torque){
 	CS3 = 0;//lower CS pin of JC3
 	spi_master_io_int(0x01000000);
 	while(CHECK3 == 0){;}//send mode
-    spi_send_one_float(tor_JC3_int); //send data
+	spi_send_one_float(tor_JC3_int); //send data
 	while(CHECK3 == 1){;}//send the data until check 0x00000002 sent from slave
 	_CP0_SET_COUNT(0);
 	while(_CP0_GET_COUNT() < 300){;}   //Delay for safety
@@ -249,6 +249,48 @@ void spi_read_spring_encoders(float *encoderlist){
 	*encoderlist++ = encoder_JC3_1;
 	*encoderlist = encoder_JC3_2;
 }
+
+//send PWM
+void spi_send_PWM(float *PWM_list){
+	float PWM_JC1 = *PWM_list++;
+	float PWM_JC2 = *PWM_list++;	
+	float PWM_JC3 = *PWM_list;		
+	
+	unsigned int PWM_JC1_int = float_int_convert(PWM_JC1);//convert from float to int
+	unsigned int PWM_JC2_int = float_int_convert(PWM_JC2);
+	unsigned int PWM_JC3_int = float_int_convert(PWM_JC3);
+	
+	CS1 = 0;//lower CS pin of JC1
+	spi_master_io_int(0x01000007);
+	while(CHECK1 == 0){;}//send mode
+    spi_send_one_float(PWM_JC1_int); //send data
+	while(CHECK1 == 1){;}//send the data until check 0x00000002 sent from slave
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   //Delay for safety
+	CS1 = 1;//pull up CS pin of JC1
+	
+    CS2 = 0;//lower CS pin of JC2
+	spi_master_io_int(0x01000007);
+	while(CHECK2 == 0){;}//send mode
+    spi_send_one_float(PWM_JC2_int); //send data
+	while(CHECK2 == 1){;}//send the data until check 0x00000002 sent from slave
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   //Delay for safety
+	CS2 = 1;//pull up CS pin of JC2
+	
+	CS3 = 0;//lower CS pin of JC3
+	spi_master_io_int(0x01000007);
+	while(CHECK3 == 0){;}//send mode
+    spi_send_one_float(PWM_JC3_int); //send data
+	while(CHECK3 == 1){;}//send the data until check 0x00000002 sent from slave
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   //Delay for safety
+	CS3 = 1;//pull up CS pin of JC3
+	
+	
+	
+}
+
 
 //read one float number
 float spi_read_one_float(){

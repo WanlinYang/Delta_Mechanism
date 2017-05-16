@@ -113,7 +113,18 @@ int main(){
 			    NU32_WriteUART3(buffer);
 		    }
 		break;    
-	  }		  
+	  }	
+	  case 'j'://read spring abs encoders
+	  {
+        float PWM_list[3];
+		int i = 0;
+		for(i;i < 3;i++){
+            NU32_ReadUART3(buffer,BUF_SIZE);
+	        sscanf(buffer,"%f",&PWM_list[i]);
+		}
+		spi_send_PWM(PWM_list);
+		break;    
+	  }	
 	  default:
       {
                     
