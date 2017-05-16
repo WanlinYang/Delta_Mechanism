@@ -1,7 +1,7 @@
 XC32PATH=E:/installations/Microchip/xc32/v1.42/bin
 HARMONYPATH=E:/installations/Microchip/harmony/v2_01b
 NU32PATH=E:/Northwestern_University/ME333/PIC32
-PORT=\\.\COM4
+PORT=\\.\COM3
 TERMEMU=E:/Northwestern_University/ME333/putty.exe
 
 #This file is used to:
