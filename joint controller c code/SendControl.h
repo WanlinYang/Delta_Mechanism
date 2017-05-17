@@ -3,10 +3,10 @@
 
 #include "NU32.h" 
 
-//PWM initialize
+//PWM signal initialization
 void send_control_ini(void);
 
-//change PWM
+//change duty cycle of PWM
 void send_control_signal(int value);
 
 #endif//SENDCONTROL_H
