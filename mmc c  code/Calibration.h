@@ -7,6 +7,7 @@
 
 #define BUF_SIZE 200
 
+//function to calculate the nominal torques and send to each joint controller
 void Calibration(float *ntorquelist);
 
 #endif//CALIBRATION_H

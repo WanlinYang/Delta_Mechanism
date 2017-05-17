@@ -1,15 +1,15 @@
 #include<stdio.h>
-#include"spi_master.h"       //spi communication with three joint controllers
-#include "NU32.h"            //NU32.h
-#include "Calibration.h"     //for calibration
-#include "gimbal_encoder.h"  //spi communication with three gimbal encoders
+#include"spi_master.h"       // spi communication with three joint controllers
+#include "NU32.h"            // NU32.h
+#include "Calibration.h"     // calibration
+#include "gimbal_encoder.h"  // spi communication with three gimbal encoders
 
 
 #define BUF_SIZE 200
 
-static volatile float zero_deg_1 = 0;  //zero degree of gimbal angle 1
-static volatile float zero_deg_2 = 0;  //zero degree of gimbal angle 2
-static volatile float zero_deg_3 = 0;  //zero degree of gimbal angle 3
+static volatile float zero_deg_1 = 0;  // zero degree of gimbal encoder 1
+static volatile float zero_deg_2 = 0;  // zero degree of gimbal encoder 2
+static volatile float zero_deg_3 = 0;  // zero degree of gimbal encoder 3
 
 
 int main(){
@@ -25,110 +25,111 @@ int main(){
 	{
 	  case 'a': // Calibration
       {
-		float ntorquelist[3] = {0,0,0};
+		float ntorquelist[3] = {0,0,0};  // define ntorquelist
 		int i = 0;
-		Calibration(ntorquelist);
+		Calibration(ntorquelist);        // Calibration  
 		for(i;i<3;i++)
 		    {
-			    sprintf(buffer,"%f\r\n",ntorquelist[i]); 
+			    sprintf(buffer,"%f\r\n",ntorquelist[i]);   // print the result
 			    NU32_WriteUART3(buffer);
 		    }
 		break;
 	  }
 	  
-	  case 'b'://Read gimbal encoders
+	  case 'b':// Read gimbal encoders
 	  {
-		float f = abs_encoder1_deg(zero_deg_1);
-		sprintf(buffer,"%.3f\r\n",f);
+		float f = abs_encoder1_deg(zero_deg_1);  // read gimbal encoder 1  
+		sprintf(buffer,"%.3f\r\n",f);            // print the result
 		NU32_WriteUART3(buffer);
-		f = abs_encoder2_deg(zero_deg_2);
-		sprintf(buffer,"%.3f\r\n",f);
+		f = abs_encoder2_deg(zero_deg_2);        // read gimbal encoder 2
+		sprintf(buffer,"%.3f\r\n",f);            // print the result
 		NU32_WriteUART3(buffer);		
-		f = abs_encoder3_deg(zero_deg_3);
-		sprintf(buffer,"%.3f\r\n",f);
+		f = abs_encoder3_deg(zero_deg_3);        // read gimbal encoder 3
+		sprintf(buffer,"%.3f\r\n",f);            // print the result
 		NU32_WriteUART3(buffer);
 		break;   
 	  }  
 	  
-	  case 'c'://Reset three gimbal encoders
+	  case 'c':// Reset three gimbal encoders
 	  {
-		zero_deg_1 = abs_encoder1_absdeg();
-		float f = abs_encoder1_deg(zero_deg_1);
-		sprintf(buffer,"%.3f\r\n",f);
+		zero_deg_1 = abs_encoder1_absdeg();      // set zero_deg_1 as a reference
+		float f = abs_encoder1_deg(zero_deg_1);  // read gimbal encoder 1 
+		sprintf(buffer,"%.3f\r\n",f);            // print the result
 		NU32_WriteUART3(buffer);
-		zero_deg_2 = abs_encoder2_absdeg();
-		f = abs_encoder2_deg(zero_deg_2);
-		sprintf(buffer,"%.3f\r\n",f);
+		zero_deg_2 = abs_encoder2_absdeg();      // set zero_deg_2 as a reference
+		f = abs_encoder2_deg(zero_deg_2);        // read gimbal encoder 2 
+		sprintf(buffer,"%.3f\r\n",f);            // print the result
 		NU32_WriteUART3(buffer);		
-		zero_deg_3 = abs_encoder3_absdeg();
-		f = abs_encoder3_deg(zero_deg_3);
-		sprintf(buffer,"%.3f\r\n",f);
+		zero_deg_3 = abs_encoder3_absdeg();      // set zero_deg_3 as a reference
+		f = abs_encoder3_deg(zero_deg_3);        // read gimbal encoder 3 
+		sprintf(buffer,"%.3f\r\n",f);            // print the result
 		NU32_WriteUART3(buffer);		
 		break;    
 	  }	
 	  
-	  case 'd'://send desired torques to 3 JCs
+	  case 'd':// Send desired torques to 3 JCs
 	  {
-		float torquelist[3] = {2.5123541,8.6235412,10.2154235};
-        spi_send_torquelist(torquelist);
-		int i = 0;
-		for(i;i<3;i++)
-		    {
-			    sprintf(buffer,"%f\r\n",torquelist[i]); 
-			    NU32_WriteUART3(buffer);
-		    }
+		float torquelist[3];                     
+        int i = 0;
+		for(i;i < 3;i++){
+            NU32_ReadUART3(buffer,BUF_SIZE);      // read three desired torques from user
+	        sscanf(buffer,"%f",&torquelist[i]);
+		}
+		spi_send_torquelist(torquelist);          // send torques to each JC
 		break;    
 	  }	  
-	  case 'e'://Receive current torques from 3 JCs
+	  case 'e':// Receive current torques from 3 JCs
 	  {
-		float torquelist[3] = {0,0,0};
+		float torquelist[3] = {0,0,0};            
 		int i = 0;
-		spi_read_torquelist(torquelist);
+		spi_read_torquelist(torquelist);                // read current torques from JCs
 		for(i;i<3;i++)
 		    {
-			    sprintf(buffer,"%f\r\n",torquelist[i]); 
+			    sprintf(buffer,"%f\r\n",torquelist[i]); // print the results
 			    NU32_WriteUART3(buffer);
 		    }
 		break;    
 	  }	
-	  case 'f'://Receive current torques from 3 JCs
+	  case 'f':// Send Stiffness to 3 JCs
 	  {
-		float Stiffness = 0.5;
-        spi_send_Stiffness(Stiffness);
+		float Stiffness;
+		NU32_ReadUART3(buffer,BUF_SIZE);      // read stiffness from user
+	    sscanf(buffer,"%f",&Stiffness);
+        spi_send_Stiffness(Stiffness);        // send stiffness to each JC 
 		break;    
 	  }
-      case 'g'://reset spring abs encoders
+      case 'g':// Reset spring abs encoders
 	  {
-        spi_reset_spring_encoders();
+        spi_reset_spring_encoders();          // reset spring abs encoders
 		break;    
 	  }		  
-      case 'h'://read spring abs encoders
+      case 'h':// Read spring abs encoders
 	  {
         float encoderlist[6] = {0,0,0,0,0,0};
-		spi_read_spring_encoders(encoderlist);
+		spi_read_spring_encoders(encoderlist);           // read spring abs encoders from JCs
 		int i = 0;
 		for(i;i<6;i++)
 		    {
-			    sprintf(buffer,"%f\r\n",encoderlist[i]); 
+			    sprintf(buffer,"%f\r\n",encoderlist[i]); // print the results
 			    NU32_WriteUART3(buffer);
 		    }
 		break;    
 	  }	
-	  case 'j'://read spring abs encoders
+	  case 'j':// Send PWM
 	  {
         float PWM_list[3];
 		int i = 0;
 		for(i;i < 3;i++){
-            NU32_ReadUART3(buffer,BUF_SIZE);
+            NU32_ReadUART3(buffer,BUF_SIZE);   // read PWM for each JC from user
 	        sscanf(buffer,"%f",&PWM_list[i]);
 		}
-		spi_send_PWM(PWM_list);
+		spi_send_PWM(PWM_list);                // send PWM
 		break;    
 	  }	
-	  default:
+	  default:// Default
       {
-                    
-        break;
+                    // do nothing
+        break;  
       }	
 	}
    }

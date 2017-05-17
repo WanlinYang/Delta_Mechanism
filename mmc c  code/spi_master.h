@@ -1,7 +1,6 @@
 #ifndef SPI_MASTER_H
 #define SPI_MASTER_H
-//This .h(and .c) file is used for spi communication between 
-//NU32s.(master code) 
+//This .h(and .c) file is used for spi communication between NU32s.(master code) 
 
 
 #include "NU32.h" 
@@ -11,9 +10,9 @@
 #define CS2 LATEbits.LATE1       // chip select pin for joint controller2
 #define CS3 LATEbits.LATE2       // chip select pin for joint controller3
 
-#define CHECK1 PORTBbits.RB9
-#define CHECK2 PORTBbits.RB10
-#define CHECK3 PORTBbits.RB11
+#define CHECK1 PORTBbits.RB9     // spi check pin for joint controller1
+#define CHECK2 PORTBbits.RB10    // spi check pin for joint controller2
+#define CHECK3 PORTBbits.RB11    // spi check pin for joint controller3
 
 //use spi to send one unsigned int
 unsigned int spi_master_io_int(unsigned int o);
