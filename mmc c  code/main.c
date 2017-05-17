@@ -118,12 +118,11 @@ int main(){
 	  case 'j':// Send PWM
 	  {
         float PWM_list[3];
-		int i = 0;
-		for(i;i < 3;i++){
-            NU32_ReadUART3(buffer,BUF_SIZE);   // read PWM for each JC from user
-	        sscanf(buffer,"%f",&PWM_list[i]);
-		}
+		
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read PWM for each JC from user
+		sscanf(buffer,"%f  %f  %f",&PWM_list[0],&PWM_list[1],&PWM_list[2]);
 		spi_send_PWM(PWM_list);                // send PWM
+		
 		break;    
 	  }	
 	  default:// Default
