@@ -26,9 +26,9 @@ int main(){
 	  case 'a': // Calibration
       {
 		float ntorquelist[3] = {0,0,0};  // define ntorquelist
-		int i = 0;
 		Calibration(ntorquelist);        // Calibration  
-		for(i;i<3;i++)
+		int i = 0;
+		for(i=0;i<3;i++)
 		    {
 			    sprintf(buffer,"%f\r\n",ntorquelist[i]);   // print the result
 			    NU32_WriteUART3(buffer);
@@ -71,10 +71,8 @@ int main(){
 	  {
 		float torquelist[3];                     
         int i = 0;
-		for(i;i < 3;i++){
-            NU32_ReadUART3(buffer,BUF_SIZE);      // read three desired torques from user
-	        sscanf(buffer,"%f",&torquelist[i]);
-		}
+		NU32_ReadUART3(buffer,BUF_SIZE);      // read three desired torques from user
+		sscanf(buffer,"%f  %f  %f",&torquelist[0], &torquelist[1], &torquelist[2]);
 		spi_send_torquelist(torquelist);          // send torques to each JC
 		break;    
 	  }	  

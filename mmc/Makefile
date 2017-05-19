@@ -1,8 +1,8 @@
-XC32PATH=E:/installations/Microchip/xc32/v1.42/bin
-HARMONYPATH=E:/installations/Microchip/harmony/v2_01b
-NU32PATH=E:/Northwestern_University/ME333/PIC32
-PORT=\\.\COM7
-TERMEMU=E:/Northwestern_University/ME333/putty.exe
+XC32PATH=D:\Program Files (x86)\Microchip\xc32\v1.42\bin
+HARMONYPATH=D:\microchip\harmony\v1_09
+NU32PATH=D:\NU\Test\PIC32Quickstart
+PORT=COM3
+TERMEMU=D:\NU\Test\PIC32\putty.exe
 
 #This file is used to:
 #	1. compile .c files into .o files
@@ -77,7 +77,8 @@ endif
 OBJS := $(patsubst %.c, %.o,$(wildcard *.c))
 HDRS := $(wildcard *.h)
 PROC = 32MX795F512H
-CFLAGS=-g -O1 -x c
+CFLAGS=-g -x c
+
 #if on windows use a different RM
 ifdef ComSpec
 	RM = del /Q

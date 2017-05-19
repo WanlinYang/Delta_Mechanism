@@ -24,7 +24,7 @@ while ~has_quit
     fprintf([
         'a: Calibration                        b: Read gimbal encoders\n',...
         'c: Reset three gimbal encoders        d: send desired torques to 3 JCs\n',...
-        'e: Receive current torques from 3 JCs f: Receive current torques from 3 JCs\n',...
+        'e: Receive current torques from 3 JCs f: Send Stiffness to 3 JCs\n',...
         'g: Reset spring abs encoders          h: Read spring abs encoders\n',...
         'j: Sent PWM                           q: Quit client\n']);
 
@@ -36,6 +36,10 @@ while ~has_quit
     
     switch selection
         case 'a'
+            input('Please move manipulator to home position.');
+            fprintf(mySerial,'\n');
+            input('Please load the article.');
+            fprintf(mySerial,'\n');
             for i=1:3
                 data(i,:) = fscanf(mySerial,'%f\n');
                 fprintf('%f\n',data(i,:));
@@ -51,20 +55,20 @@ while ~has_quit
                 fprintf('%f\n',data(i,:));
             end
         case 'd'
-            for i=1:3
-                data(i,:) = fscanf(mySerial,'%f\n');
-                fprintf('%f\n',data(i,:));
-            end
+            fprintf('Please enter desired torques\n');
+            torque1 = input('torque1 = ');
+            torque2 = input('torque2 = ');
+            torque3 = input('torque3 = ');
+            fprintf(mySerial, '%f  %f  %f\n', [torque1,torque2,torque3]);
+            fprintf('Desired torques have been input\n')
         case 'e'
             for i=1:3
                 data(i,:) = fscanf(mySerial,'%f\n');
                 fprintf('%f\n',data(i,:));
             end
         case 'f'
-            for i=1:3
-                data(i,:) = fscanf(mySerial,'%f\n');
-                fprintf('%f\n',data(i,:));
-            end
+            stiffness = input('Please enter stiffness(Nm/rad): ');
+            fprintf(mySerial,'%f',stiffness);
         case 'g'
             fprintf('Spring encoders have been reset');
         case 'h'
