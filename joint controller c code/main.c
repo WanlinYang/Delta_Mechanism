@@ -249,25 +249,32 @@ int main(){
     switch (CN){
 	case 0x01000000:
 	{//receive one desired torque
+		__builtin_disable_interrupts();
 		Desired_Torque = spi_read_float();
+		__builtin_enable_interrupts();
 		break;
     }
 	case 0x01000001:
 	{//send current torque   
-		//float temp = joint_torque(Stiffness,z_deg_1,z_deg_2);
-		float temp = Desired_Position;
+		__builtin_disable_interrupts();
+		float temp = joint_torque(Stiffness,z_deg_1,z_deg_2);
 		spi_send_float(temp);
+		__builtin_enable_interrupts();
 		break;
     }
     case 0x01000002:
 	{//receive one nominal torque
+		__builtin_disable_interrupts();
 	    Nominal_Torque = spi_read_float();
+		__builtin_enable_interrupts();		
 		break;
 	}
 	
     case 0x01000003:
 	{//receive stiffness
+		__builtin_disable_interrupts();
 		Stiffness = spi_read_float();
+		__builtin_enable_interrupts();			
 		break;
 	}
 /* 	case 0x01000004:
@@ -292,8 +299,10 @@ int main(){
 	}   */
 	case 0x01000007:
 	{//receive PWM_counts
+		__builtin_disable_interrupts();		
 		PWM_counts = spi_read_float();
 		Mode = 1;
+		__builtin_enable_interrupts();			
 		break;
 	}  
 	case 0x01000008:
@@ -307,47 +316,58 @@ int main(){
 	}  
 	case 0x01000009:
 	{//send data of incremental encoder
+		__builtin_disable_interrupts();			
 		spi_send_float(encoder_angle());
+		__builtin_enable_interrupts();			
 		break;
 	}  
     case 0x01000010:
-	{//set Mode to IDLE
+	{//set Mode to IDLE	
 		CHECK = 1;
 		Mode = 0;
 		_CP0_SET_COUNT(0);
 		while(_CP0_GET_COUNT() < 50000){;}
-		CHECK = 0;  
+		CHECK = 0; 	
 		break;
 	} 
 	case 0x01000011:
 	{//set Mode to HOLD
+		__builtin_disable_interrupts();				
 		Desired_Position = spi_read_float();
+		__builtin_enable_interrupts();
 		Eint_current = 0;
 		Eint_position = 0;
 		Error_position_prev = 0;
 		Mode = 2;
+			
 		break;
 	} 
 	case 0x01000012:
 	{//receive global_position_count
+		__builtin_disable_interrupts();		
 		Desired_Position_Count = (int)spi_read_float();
+		__builtin_enable_interrupts();			
 		break;
 	} 
 	case 0x01000013:
 	{
+
 		static int i_check = 0;
 		if (i_check < Desired_Position_Count){
+			__builtin_disable_interrupts();
 			Desired_Position_List[i_check] = spi_read_float();
+			__builtin_enable_interrupts();				
 			i_check = i_check + 1;
 		}
 	    if (i_check == Desired_Position_Count){
 			i_check = 0;
 		}
+
 		break;
 	}
 	case 0x01000014:
 	{
-        CHECK = 1;
+		CHECK = 1;
 		Actual_Position_Count = 0;
 		Error_position_prev = 0;
 		Eint_position = 0;
@@ -355,7 +375,7 @@ int main(){
 		Mode = 3;
 		_CP0_SET_COUNT(0);
 		while(_CP0_GET_COUNT() < 50000){;}
-		CHECK = 0;  
+		CHECK = 0; 	
 		break;
 	}
 	case 0x01000015:
