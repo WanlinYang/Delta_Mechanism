@@ -181,7 +181,7 @@ int main(){
 		spi_send_anglelist(angle_list);        // Send desired angle to JCs
 		break;
 	  }	
-	  case 'n':// move end-effect to an certain position
+	  case 'n':// load cubic trajectory
 	  {
 	    int count = 0;
 		int i = 0;
