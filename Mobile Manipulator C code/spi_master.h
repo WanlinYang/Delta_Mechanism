@@ -71,4 +71,19 @@ void spi_set_track(void);
 //read incremental encoders
 void spi_read_act_anglelist(float *anglelist);
 
+//send Kp in current controller
+void spi_send_Kp_c(float Kp_c);
+
+//send Ki in current controller
+void spi_send_Ki_c(float Ki_c);
+
+//send Kp in position controller
+void spi_send_Kp_p(float Kp_p);
+
+//send Ki in position controller
+void spi_send_Ki_p(float Ki_p);
+
+//send Kd in position controller
+void spi_send_Kd_p(float Kd_p);
+
 #endif//SPI_MASTER_H

@@ -510,6 +510,166 @@ void spi_read_act_anglelist(float *anglelist){
 	*anglelist = encoder_JC3;
 }
 
+//send Kp in current controller
+void spi_send_Kp_c(float Kp_c){
+	unsigned int Kp_c_int = float_int_convert(Kp_c);// convert from float to int for spi communication
+	
+	CS1 = 0;                           // lower CS pin of JC1
+	spi_master_io_int(0x01000016);     // send operating mode to JC1
+	while(CHECK1 == 0){;}              // check if JC1 is ready to receive data
+    spi_send_one_float(Kp_c_int);      // send data
+	while(CHECK1 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS1 = 1;                           // pull up CS pin of JC1
+	
+	CS2 = 0;                           // lower CS pin of JC2
+	spi_master_io_int(0x01000016);     // send operating mode to JC2
+	while(CHECK2 == 0){;}              // check if JC2 is ready to receive data
+    spi_send_one_float(Kp_c_int);      // send data
+	while(CHECK2 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS2 = 1;                           // pull up CS pin of JC2
+	 
+	CS3 = 0;                           // lower CS pin of JC3
+	spi_master_io_int(0x01000016);     // send operating mode to JC3
+	while(CHECK3 == 0){;}              // check if JC3 is ready to receive data
+    spi_send_one_float(Kp_c_int);      // send data
+	while(CHECK3 == 1){;}              // check if the data is received
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS3 = 1;                           // pull up CS pin of JC3
+}
+
+//send Ki in current controller
+void spi_send_Ki_c(float Ki_c){
+	unsigned int Ki_c_int = float_int_convert(Ki_c);// convert from float to int for spi communication
+	
+	CS1 = 0;                           // lower CS pin of JC1
+	spi_master_io_int(0x01000017);     // send operating mode to JC1
+	while(CHECK1 == 0){;}              // check if JC1 is ready to receive data
+    spi_send_one_float(Ki_c_int);      // send data
+	while(CHECK1 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS1 = 1;                           // pull up CS pin of JC1
+	
+	CS2 = 0;                           // lower CS pin of JC2
+	spi_master_io_int(0x01000017);     // send operating mode to JC2
+	while(CHECK2 == 0){;}              // check if JC2 is ready to receive data
+    spi_send_one_float(Ki_c_int);      // send data
+	while(CHECK2 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS2 = 1;                           // pull up CS pin of JC2
+	 
+	CS3 = 0;                           // lower CS pin of JC3
+	spi_master_io_int(0x01000017);     // send operating mode to JC3
+	while(CHECK3 == 0){;}              // check if JC3 is ready to receive data
+    spi_send_one_float(Ki_c_int);      // send data
+	while(CHECK3 == 1){;}              // check if the data is received
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS3 = 1;                           // pull up CS pin of JC3
+}
+
+//send Kp in position controller
+void spi_send_Kp_p(float Kp_p){
+	unsigned int Kp_p_int = float_int_convert(Kp_p);// convert from float to int for spi communication
+	
+	CS1 = 0;                           // lower CS pin of JC1
+	spi_master_io_int(0x01000018);     // send operating mode to JC1
+	while(CHECK1 == 0){;}              // check if JC1 is ready to receive data
+    spi_send_one_float(Kp_p_int);      // send data
+	while(CHECK1 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS1 = 1;                           // pull up CS pin of JC1
+	
+	CS2 = 0;                           // lower CS pin of JC2
+	spi_master_io_int(0x01000018);     // send operating mode to JC2
+	while(CHECK2 == 0){;}              // check if JC2 is ready to receive data
+    spi_send_one_float(Kp_p_int);      // send data
+	while(CHECK2 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS2 = 1;                           // pull up CS pin of JC2
+	 
+	CS3 = 0;                           // lower CS pin of JC3
+	spi_master_io_int(0x01000018);     // send operating mode to JC3
+	while(CHECK3 == 0){;}              // check if JC3 is ready to receive data
+    spi_send_one_float(Kp_p_int);      // send data
+	while(CHECK3 == 1){;}              // check if the data is received
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS3 = 1;                           // pull up CS pin of JC3
+}
+
+//send Ki in position controller
+void spi_send_Ki_p(float Ki_p){
+	unsigned int Ki_p_int = float_int_convert(Ki_p);// convert from float to int for spi communication
+	
+	CS1 = 0;                           // lower CS pin of JC1
+	spi_master_io_int(0x01000019);     // send operating mode to JC1
+	while(CHECK1 == 0){;}              // check if JC1 is ready to receive data
+    spi_send_one_float(Ki_p_int);      // send data
+	while(CHECK1 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS1 = 1;                           // pull up CS pin of JC1
+	
+	CS2 = 0;                           // lower CS pin of JC2
+	spi_master_io_int(0x01000019);     // send operating mode to JC2
+	while(CHECK2 == 0){;}              // check if JC2 is ready to receive data
+    spi_send_one_float(Ki_p_int);      // send data
+	while(CHECK2 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS2 = 1;                           // pull up CS pin of JC2
+	 
+	CS3 = 0;                           // lower CS pin of JC3
+	spi_master_io_int(0x01000019);     // send operating mode to JC3
+	while(CHECK3 == 0){;}              // check if JC3 is ready to receive data
+    spi_send_one_float(Ki_p_int);      // send data
+	while(CHECK3 == 1){;}              // check if the data is received
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS3 = 1;                           // pull up CS pin of JC3
+}
+
+//send Kd in position controller
+void spi_send_Kd_p(float Kd_p){
+	unsigned int Kd_p_int = float_int_convert(Kd_p);// convert from float to int for spi communication
+	
+	CS1 = 0;                           // lower CS pin of JC1
+	spi_master_io_int(0x01000020);     // send operating mode to JC1
+	while(CHECK1 == 0){;}              // check if JC1 is ready to receive data
+    spi_send_one_float(Kd_p_int);      // send data
+	while(CHECK1 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS1 = 1;                           // pull up CS pin of JC1
+	
+	CS2 = 0;                           // lower CS pin of JC2
+	spi_master_io_int(0x01000020);     // send operating mode to JC2
+	while(CHECK2 == 0){;}              // check if JC2 is ready to receive data
+    spi_send_one_float(Kd_p_int);      // send data
+	while(CHECK2 == 1){;}              // check if the data is received 
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS2 = 1;                           // pull up CS pin of JC2
+	 
+	CS3 = 0;                           // lower CS pin of JC3
+	spi_master_io_int(0x01000020);     // send operating mode to JC3
+	while(CHECK3 == 0){;}              // check if JC3 is ready to receive data
+    spi_send_one_float(Kd_p_int);      // send data
+	while(CHECK3 == 1){;}              // check if the data is received
+	_CP0_SET_COUNT(0);
+	while(_CP0_GET_COUNT() < 300){;}   // delay for safety
+	CS3 = 1;                           // pull up CS pin of JC3
+}
+
 
 //read one float number
 float spi_read_one_float(){

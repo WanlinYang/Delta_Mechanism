@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "spi_master.h"       // spi communication with three joint controllers
+#include "spi_master.h"      // spi communication with three joint controllers
 #include "NU32.h"            // NU32.h
 #include "Calibration.h"     // calibration
 #include "gimbal_encoder.h"  // spi communication with three gimbal encoders
@@ -9,17 +9,17 @@
 #define BUF_SIZE 200
 
 
-static volatile float zero_deg_1 = 0;  // zero degree of gimbal encoder 1
-static volatile float zero_deg_2 = 0;  // zero degree of gimbal encoder 2
-static volatile float zero_deg_3 = 0;  // zero degree of gimbal encoder 3
-static int position_list_count = 0;    // Mode3 position counts
-static float desired_JC1_list[2000] = {0};
-static float desired_JC2_list[2000] = {0};
-static float desired_JC3_list[2000] = {0};
+static volatile float zero_deg_1 = 0;       // zero degree of gimbal encoder 1
+static volatile float zero_deg_2 = 0;       // zero degree of gimbal encoder 2
+static volatile float zero_deg_3 = 0;       // zero degree of gimbal encoder 3
+static int position_list_count = 0;         // Mode3 position counts
+static float desired_JC1_list[2000] = {0};  // store desired anglelist of JC1 in TRACK mode
+static float desired_JC2_list[2000] = {0};  // store desired anglelist of JC2 in TRACK mode
+static float desired_JC3_list[2000] = {0};  // store desired anglelist of JC2 in TRACK mode
+static float R1 = 0,R2 = 0,L1 = 0,L2 = 0;   // store geometry parameters 
 
 int main(){
-	char buffer[BUF_SIZE];
-                             
+	char buffer[BUF_SIZE];                       
 	NU32_Startup();                  
 	spi_master_init();               //initialize spi3 and communication with three joint controllers
 	abs_encoder_spi_master_init();   //initialize spi4 and communication with three gimbal encoders
@@ -119,7 +119,19 @@ int main(){
 			    NU32_WriteUART3(buffer);
 		    }
 		break;    
-	  }	
+	  }
+	  case 'i':// Read geometry parameters 
+	  {
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read R1 from user
+	    sscanf(buffer,"%f",&R1);
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read R2 from user
+	    sscanf(buffer,"%f",&R2);
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read L1 from user
+	    sscanf(buffer,"%f",&L1);		
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read L2 from user
+	    sscanf(buffer,"%f",&L2); 
+		  
+	  }
 	  case 'j':// Send PWM
 	  {
         float PWM_list[3];
@@ -148,23 +160,34 @@ int main(){
 		    }
 		break;     
 	  }	
+	  case 'u':// Set control gains
+	  {
+		float Kp_c,Ki_c,Kp_p,Ki_p,Kd_p;
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read Kp in current controller from user
+	    sscanf(buffer,"%f",&Kp_c);
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read Ki in current controller from user
+	    sscanf(buffer,"%f",&Ki_c);
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read Kp in position controller from user
+	    sscanf(buffer,"%f",&Kp_p);		
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read Ki in position controller from user
+	    sscanf(buffer,"%f",&Ki_p);   
+		NU32_ReadUART3(buffer,BUF_SIZE);   // read Ki in position controller from user
+	    sscanf(buffer,"%f",&Kd_p);
+		spi_send_Kp_c(Kp_c);
+		spi_send_Ki_c(Ki_c);
+		spi_send_Kp_p(Kp_p);
+		spi_send_Ki_p(Ki_p);
+		spi_send_Kd_p(Kd_p);
+	  }
 	  case 'p':// Set JCs to IDLE Mode
 	  {
         spi_set_idle();         // Set JCs to IDLE Mode
 		break;    
-	  }	
+	  }
 	  case 'o':// move end-effect to an certain position
 	  {
 		float angle_list[3];
-		float R1,R2,L1,L2,x,y,z;
- 		NU32_ReadUART3(buffer,BUF_SIZE);   // read R1 from user
-	    sscanf(buffer,"%f",&R1);
-		NU32_ReadUART3(buffer,BUF_SIZE);   // read R2 from user
-	    sscanf(buffer,"%f",&R2);
-		NU32_ReadUART3(buffer,BUF_SIZE);   // read R2 from user
-	    sscanf(buffer,"%f",&L1);		
-		NU32_ReadUART3(buffer,BUF_SIZE);   // read R2 from user
-	    sscanf(buffer,"%f",&L2);
+		float x,y,z;
 		NU32_ReadUART3(buffer,BUF_SIZE);   // read R2 from user
 	    sscanf(buffer,"%f",&x);
 		NU32_ReadUART3(buffer,BUF_SIZE);   // read R2 from user
@@ -190,15 +213,6 @@ int main(){
 		float desired_position_xlist[2000];
 		float desired_position_ylist[2000];
 		float desired_position_zlist[2000];
-		float R1,R2,L1,L2;
-		NU32_ReadUART3(buffer,BUF_SIZE);   // read R1 from user
-	    sscanf(buffer,"%f",&R1);
-		NU32_ReadUART3(buffer,BUF_SIZE);   // read R2 from user
-	    sscanf(buffer,"%f",&R2);
-		NU32_ReadUART3(buffer,BUF_SIZE);   // read L2 from user
-	    sscanf(buffer,"%f",&L1);	
-		NU32_ReadUART3(buffer,BUF_SIZE);   // read L2 from user
-	    sscanf(buffer,"%f",&L2);
 		NU32_ReadUART3(buffer,BUF_SIZE);
 		sscanf(buffer,"%d",&count);
 		spi_send_counts(count);
