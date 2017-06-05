@@ -23,14 +23,15 @@ while ~has_quit
     % display the menu options; this list will grow
     fprintf([
         'a: Calibration                        b: Read gimbal encoders\n',...
-        'c: Reset gimbal encoders        d: Send desired torques to 3 JCs\n',...
-        'e: Receive current torques from 3 JCs f: Send Stiffness to 3 JCs\n',...
+        'c: Reset gimbal encoders              d: Set desired torques to 3 JCs\n',...
+        'e: Read current torques from 3 JCs    f: Set Stiffness to 3 JCs\n',...
         'g: Reset spring abs encoders          h: Read spring abs encoders\n',...
-        'j: Sent PWM                           k: Reset incremental encoders\n',...
-        'l: Read incremental encoders          p: Set JCs to IDLE mode\n',...
-        'o: move end-effect to an position     n: load cubic trajectory\n',...
-        'y: Set JCs to TRACK mode              p: Set JCs to IDLE Mode\n',...
-        'r: Read actual angle data from JCs    q: Quit client\n']);	
+        'i: Read geometry parameter            j: Set PWM\n',...
+        'k: Reset incremental encoders         l: Read incremental encoders\n',...
+        'u: Set control gains                  p: Set JCs to IDLE mode\n',...
+        'o: Move end-effect to an position     n: Load cubic trajectory\n',...
+        'y: Set JCs to TRACK mode              r: Read actual angle data from JCs\n',...
+        'q: Quit client\n']);
 
 	
     % read the user's choice
@@ -100,15 +101,27 @@ while ~has_quit
             end
         case 'p'
             fprintf('JCs have been set to IDLE Mode\n'); 
-        case 'o'
-            L1 = input('Enter R1: ');
-            fprintf(mySerial, '%f\n', L1);
-            L2 = input('Enter R2: ');
-            fprintf(mySerial, '%f\n', L2);
-            R1 = input('Enter L1: ');
+        case 'i'
+            R1 = input('Enter R1: ');
             fprintf(mySerial, '%f\n', R1);
-            R2 = input('Enter L2: ');
+            R2 = input('Enter R2: ');
             fprintf(mySerial, '%f\n', R2);
+            L1 = input('Enter L1: ');
+            fprintf(mySerial, '%f\n', L1);
+            L2 = input('Enter L2: ');
+            fprintf(mySerial, '%f\n', L2);			
+		case 'u'
+			Kp_c = input('Enter Kp in current controller: ');
+            fprintf(mySerial, '%f\n', Kp_c);
+			Ki_c = input('Enter Ki in current controller: ');
+            fprintf(mySerial, '%f\n', Ki_c);
+			Kp_p = input('Enter Kp in position controller: ');
+            fprintf(mySerial, '%f\n', Kp_p);
+			Ki_p = input('Enter Ki in position controller: ');
+            fprintf(mySerial, '%f\n', Ki_p);	
+			Kd_p = input('Enter Kp in position controller: ');
+            fprintf(mySerial, '%f\n', Kd_p);			
+        case 'o'		
             x = input('Enter x: ');
             fprintf(mySerial, '%f\n', x);
             y = input('Enter y: ');
@@ -117,16 +130,7 @@ while ~has_quit
             fprintf(mySerial, '%f\n', z);
             fprintf('JCs have been set to HOLD Mode\n'); 
         
-        case 'n'                         % example operation   
-            R1 = input('Enter R1: ');
-            fprintf(mySerial, '%f\n', R1);
-            R2 = input('Enter R2: ');
-            fprintf(mySerial, '%f\n', R2);
-            L1 = input('Enter L1: ');
-            fprintf(mySerial, '%f\n', L1);
-            L2 = input('Enter L2: ');
-            fprintf(mySerial, '%f\n', L2);
-            
+        case 'n'                         % example operation              
             nx = input('Enter cubic trajectory of x:'); % get the number to send
             refx = genRef(nx, 'cubic')
             ny = input('Enter cubic trajectory of y:'); % get the number to send
@@ -150,24 +154,6 @@ while ~has_quit
         case 'y'
             fprintf('JCs have been set to TRACK Mode\n'); 
         case 'r'
-%             nsamples = fscanf(mySerial,'%d\n'); 
-%             for i=1:nsamples
-%                 J1act(i) = fscanf(mySerial,'%f\n');
-%                 J2act(i) = fscanf(mySerial,'%f\n');
-%                 J3act(i) = fscanf(mySerial,'%f\n');
-%                 J1ref(i) = fscanf(mySerial,'%f\n');
-%                 J2ref(i) = fscanf(mySerial,'%f\n');
-%                 J3ref(i) = fscanf(mySerial,'%f\n');
-%             end
-%                 figure
-%                 plot(J1act)
-%                 hold on
-%                 plot(J2act)
-%                 plot(J3act)
-%                 plot(J1ref)
-%                 plot(J2ref)
-%                 plot(J3ref)
-%                 legend('J1act','J2act','J3act','J1ref','J2ref','J3ref') 
                 nsamples = fscanf(mySerial,'%d');       % first get the number of samples being sent
                 fprintf('%d\n',nsamples);
                 data_temp = zeros(nsamples,6);               % two values per sample:  ref and actual
