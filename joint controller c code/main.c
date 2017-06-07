@@ -146,7 +146,7 @@ void __ISR(_TIMER_2_VECTOR, IPL4SOFT) Controller(void){
 				OC1RS = (int)(0.66667*u_current); 
 				LATDbits.LATD6 = 0;
 			}
-			else11
+			else
 			{
 				OC1RS = (int)(-0.66667*u_current); 
 				LATDbits.LATD6 = 1;
