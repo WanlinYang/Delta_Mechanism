@@ -26,7 +26,7 @@ while ~has_quit
         'c: Reset gimbal encoders              d: Set desired torques to 3 JCs\n',...
         'e: Read current torques from 3 JCs    f: Set Stiffness to 3 JCs\n',...
         'g: Reset spring abs encoders          h: Read spring abs encoders\n',...
-        'i: Read geometry parameter            j: Set PWM\n',...
+        'i: Set geometry parameters            j: Set PWM\n',...
         'k: Reset incremental encoders         l: Read incremental encoders\n',...
         'u: Set control gains                  p: Set JCs to IDLE mode\n',...
         'o: Move end-effect to an position     n: Load cubic trajectory\n',...
@@ -93,7 +93,7 @@ while ~has_quit
             fprintf(mySerial, '%f\n', pwm3);
             fprintf('Desired PWM have been input\n')
         case 'k'
-            fprintf('Incremental encoders have been reset'); 
+            fprintf('Incremental encoders have been reset\n'); 
         case 'l'
             for i=1:3
                 data(i,:) = fscanf(mySerial,'%f\n');
@@ -132,11 +132,11 @@ while ~has_quit
         
         case 'n'                         % example operation              
             nx = input('Enter cubic trajectory of x:'); % get the number to send
-            refx = genRef(nx, 'cubic')
+            refx = genRef(nx, 'cubic');
             ny = input('Enter cubic trajectory of y:'); % get the number to send
-            refy = genRef(ny, 'cubic')
+            refy = genRef(ny, 'cubic');
             nz = input('Enter cubic trajectory of z:'); % get the number to send
-            refz = genRef(nz, 'cubic')
+            refz = genRef(nz, 'cubic');
             if(length(refx)==length(refy) && length(refy)==length(refz))
                 
                 fprintf(mySerial, '%d\n',length(refx)); % send the number
@@ -149,17 +149,24 @@ while ~has_quit
                 for i=1:length(refz)
                     fprintf(mySerial, '%f\n',refz(i)); % send the number
                 end
-            else fprintf('length of x,y,z are not equal\n'); 
+                figure
+                plot(refx);
+                hold on
+                plot(refy);
+                plot(refz);
+                legend('refx','refy','refz')
+            else
+                fprintf('length of x,y,z are not equal\n');
             end
         case 'y'
             fprintf('JCs have been set to TRACK Mode\n'); 
         case 'r'
                 nsamples = fscanf(mySerial,'%d');       % first get the number of samples being sent
-                fprintf('%d\n',nsamples);
+%                 fprintf('%d\n',nsamples);
                 data_temp = zeros(nsamples,6);               % two values per sample:  ref and actual
                 for i=1:nsamples
                     data_temp(i,:) = fscanf(mySerial,'%f %f %f %f %f %f'); % read in data from PIC32; assume ints, in mA
-                    fprintf('%f %f %f %f %f %f\n',data_temp(i,:));
+%                     fprintf('%f %f %f %f %f %f\n',data_temp(i,:));
                     times(i) = (i-1)*0.005;                 % 0.005 s between samples
                 end
                 if nsamples > 1	
