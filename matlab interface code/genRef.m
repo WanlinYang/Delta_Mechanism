@@ -88,15 +88,15 @@ else  % default is step trajectory
   ref(samp+1) = angle_list(end);
 
 end
-str = sprintf('%d samples at %7.2f Hz taking %5.3f sec', ...
-	      length(ref),MOTOR_SERVO_RATE,reflist(end,1));
-plot(ref);
-title(str);
-border = 0.1*(max(ref)-min(ref));
-axis([0, length(ref), min(ref)-border, max(ref)+border]);
-ylabel('Motor angle (degrees)'); 
-xlabel('Sample number');
-set(gca,'FontSize',18);
+% str = sprintf('%d samples at %7.2f Hz taking %5.3f sec', ...
+	      % length(ref),MOTOR_SERVO_RATE,reflist(end,1));
+% plot(ref);
+% title(str);
+% border = 0.1*(max(ref)-min(ref));
+% axis([0, length(ref), min(ref)-border, max(ref)+border]);
+% ylabel('Motor angle (degrees)'); 
+% xlabel('Sample number');
+% set(gca,'FontSize',18);
 
 if length(ref) >= 2000
     msg = 'invalid input';

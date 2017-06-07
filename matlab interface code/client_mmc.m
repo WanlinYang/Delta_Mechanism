@@ -163,8 +163,8 @@ while ~has_quit
                     times(i) = (i-1)*0.005;                 % 0.005 s between samples
                 end
                 if nsamples > 1	
-                figure    
-                stairs(times,data_temp(:,1:6));            % plot the reference and actual
+                % figure    
+                % stairs(times,data_temp(:,1:6));            % plot the reference and actual
                 
                 figure
                 plot(data_temp(:,1))
