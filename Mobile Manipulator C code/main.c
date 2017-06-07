@@ -16,7 +16,7 @@ static int position_list_count = 0;         // Mode3 position counts
 static float desired_JC1_list[2000] = {0};  // store desired anglelist of JC1 in TRACK mode
 static float desired_JC2_list[2000] = {0};  // store desired anglelist of JC2 in TRACK mode
 static float desired_JC3_list[2000] = {0};  // store desired anglelist of JC2 in TRACK mode
-static float R1 = 0,R2 = 0,L1 = 0,L2 = 0;   // store geometry parameters 
+static float R1 = 1,R2 = 1,L1 = 1,L2 = 1;   // store geometry parameters 
 
 int main(){
 	char buffer[BUF_SIZE];                       
@@ -130,7 +130,7 @@ int main(){
 	    sscanf(buffer,"%f",&L1);		
 		NU32_ReadUART3(buffer,BUF_SIZE);   // read L2 from user
 	    sscanf(buffer,"%f",&L2); 
-		  
+		break;  
 	  }
 	  case 'j':// Send PWM
 	  {
@@ -178,6 +178,7 @@ int main(){
 		spi_send_Kp_p(Kp_p);
 		spi_send_Ki_p(Ki_p);
 		spi_send_Kd_p(Kd_p);
+		break;
 	  }
 	  case 'p':// Set JCs to IDLE Mode
 	  {
