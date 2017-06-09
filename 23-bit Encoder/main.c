@@ -3,7 +3,7 @@
 
 #define BUF_SIZE 200
 
-static volatile float zero_deg = 0;
+static volatile float zero_deg = 0;       // global variable indicating zero degree of encoder
 
 int main(){
 	char buffer[BUF_SIZE];
