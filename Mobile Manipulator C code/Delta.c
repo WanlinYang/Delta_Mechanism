@@ -172,7 +172,7 @@ The equations are derived from the equation:
 *d is the output of the function. The target of the following iterations is to make the elements of d equal to 0
 L2 is length of upper legs
 Equations of *blist, *plist, and *Llist are calculated in DeltaFkin
-Clearer illustration of the parameters is in Delta_labels.pdf
+Clearer illustration of the parameters is in Delta_labels.pdf (https://github.com/WanlinYang/Delta_Mechanism/blob/master/Delta_labels.pdf)
 
 */
 	
