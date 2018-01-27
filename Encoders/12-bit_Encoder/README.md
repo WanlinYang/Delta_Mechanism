@@ -9,7 +9,8 @@ For our control system, the following harware components are needed.
 * three AEAT-6012 encoders (one is enough for testing)
 * the NU32 microcontroller board
 
-The circuit connection is shown in [12-bit_circuit_diagram.pdf](12-bit_circuit_diagram.pdf).
+The circuit connection is shown in [12-bit_circuit_diagram.pdf](12-bit_circuit_diagram.pdf)
+
 [gimbal_encoder.c](gimbal_encoder.c) and [gimbal_encoder.h](gimbal_encoder.h) have functions
 to read three encoders using an NU32.
 
