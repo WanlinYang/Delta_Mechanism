@@ -1,6 +1,6 @@
 # Delta C Code
 
-This library is the C code version of the corresponding [MATLAB library](Delta_Mechanism/Delta_MATLAB_code/)
+This library is the C code version of the corresponding [MATLAB library](https://github.com/WanlinYang/Delta_Mechanism/tree/master/Delta_MATLAB_code)
 
 The following functions are included
 
