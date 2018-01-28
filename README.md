@@ -7,7 +7,7 @@ demostrates the mechanism.
 ![Delta CAD](Delta_CAD.png)
 
 This repository includes kinematics and a control implementation of the Delta platform.
-The detailed theoratical analysis is included in the [Thesis](Thesis.pdf)
+The detailed theoratical analysis is included in the [Thesis](Thesis.pdf).
 
 ### Delta MATLAB code
 
