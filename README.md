@@ -24,7 +24,7 @@ real-time control with microcontrollers.
 [Encoders](/Encoders) has C functions to read the encoders applied in the project.
 
 Two kinds of revolute encoders are used in the system. Three 12-bit encoders are used to measure angles of
-gimbal, and six 23-bit encoders is used to measure angles of torsion springs.
+gimbal, and six 23-bit encoders is used to measure angles of torsional springs.
 
 ### System Demo
 
