@@ -2,7 +2,7 @@
 
 The [AS38-H39E](https://www.broadcom.com/products/motion-control-encoders/absolute-encoders/single-turn-encoders/as38-h39e-series)
 optical encoder offers 23-bit single-turn and 16-bit multi-turn counts, hence a combined 39-bit high resolution.
-We use it to measure the rotation angle a torsion spirng.
+We use it to measure the rotation angle of torsional spirng.
 
 To test the encoder, the following hardware components are needed.
 
